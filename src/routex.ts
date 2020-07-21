@@ -4,6 +4,8 @@ import {
   ServerRequest,
   Server,
   HTTPOptions,
+  serveTLS,
+  HTTPSOptions,
 } from "https://deno.land/std/http/server.ts";
 import { ICreateCtx, ICtx, ICtxProviders } from "./ctx.ts";
 import { defaultErrorHandler } from "./errors/defaultHandler.ts";
@@ -17,6 +19,11 @@ export interface IDeroutexOptions {
   requestIdGenerator?: (() => string) | false;
   errorHandler?: ErrorHandler;
   providers?: ICtxProviders;
+}
+
+export interface IListenResponse {
+  wait: Promise<void>;
+  server: Server;
 }
 
 export class Deroutex extends Router {
@@ -93,11 +100,11 @@ export class Deroutex extends Router {
   };
 
   /**
-   * Starts the server
+   * Starts the HTTP server
    */
   public listen(
     addr: string | HTTPOptions,
-  ): { wait: Promise<void>; server: Server } {
+  ): IListenResponse {
     const server = serve(addr);
 
     const wait = (async () => {
@@ -110,6 +117,44 @@ export class Deroutex extends Router {
       wait,
       server,
     };
+  }
+
+  /**
+   * Starts the server HTTP and wait
+   */
+  public async listenAndServe(
+    addr: string | HTTPOptions,
+  ) {
+    await this.listen(addr).wait;
+  }
+
+  /**
+   * Starts the HTTPS server
+   */
+  public listenSecure(
+    options: HTTPSOptions,
+  ): IListenResponse {
+    const server = serveTLS(options);
+
+    const wait = (async () => {
+      for await (const req of server) {
+        this.handler(req);
+      }
+    })();
+
+    return {
+      wait,
+      server,
+    };
+  }
+
+  /**
+   * Starts the HTTPS server and wait
+   */
+  public async listenAndServeSecure(
+    options: HTTPSOptions,
+  ) {
+    await this.listenSecure(options).wait;
   }
 
   /**

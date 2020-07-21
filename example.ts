@@ -44,4 +44,4 @@ privateRouter.any("/", () => {
 }, { exact: false });
 
 // Start the server!
-await app.listen(":5000").wait;
+await app.listenAndServe(":5000");

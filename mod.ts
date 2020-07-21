@@ -8,6 +8,7 @@ export { Methods } from "./src/methods.ts";
 export { Router } from "./src/router.ts";
 export {
   IDeroutexOptions,
+  IListenResponse,
   Deroutex,
 } from "./src/routex.ts";
 export { ICtx, ICtxProviders, ICtxData, ICreateCtx } from "./src/ctx.ts";

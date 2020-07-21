@@ -6,8 +6,7 @@ This is not ready for production!
 
 What is missing:
 
-- More refactoring to bring in line with Deno's style
-- Porting over Jest [tests](./test) to Deno's test framework
+- Documentation (currently Routex's docs can be used, main changes are to the `listen` APIs)
 - First-party packages for body parsing, cookies, WebSockets, etc
 - Continuous integration (GitHub Actions)
 - Finding a home to release it
@@ -71,7 +70,7 @@ privateRouter.any("/", () => {
 }, { exact: false });
 
 // Start the server!
-await app.listen(":5000").wait;
+await app.listenAndServe(":5000");
 ```
 
 ## Support
