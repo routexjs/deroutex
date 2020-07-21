@@ -4,7 +4,6 @@ export { TextBody } from "./src/body/text.ts";
 export { ErrorWithBody } from "./src/errors/body.ts";
 export { defaultErrorHandler } from "./src/errors/defaultHandler.ts";
 export { ErrorWithStatusCode } from "./src/errors/status.ts";
-export { useExpress } from "./src/express.ts";
 export { Methods } from "./src/methods.ts";
 export { Router } from "./src/router.ts";
 export {

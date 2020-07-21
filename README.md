@@ -19,7 +19,6 @@ Feel free to test and give feedback 😃
 
 - Easy to use, good performance
 - Modern API, native Promise support, fully typed (TypeScript)
-- Close compatibility with Express/Koa, fast migration
 - Very few dependencies, small API surface, easy to fully understand and extend
 - 100% code coverage, well tested
 

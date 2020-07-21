@@ -9,7 +9,7 @@ export interface ICtx {
   readonly matches?: RegExpExecArray[];
   path: string;
   readonly method: Methods;
-  readonly query: any;
+  readonly query: { [key: string]: string };
   readonly requestId?: string;
   data: ICtxData;
   providers: ICtxProviders;

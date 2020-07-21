@@ -2,15 +2,14 @@ import { generate as generateUuid } from "https://deno.land/std/uuid/v4.ts";
 import {
   serve,
   ServerRequest,
-  HTTPOptions,
   Server,
+  HTTPOptions,
 } from "https://deno.land/std/http/server.ts";
 import { ICreateCtx, ICtx, ICtxProviders } from "./ctx.ts";
 import { defaultErrorHandler } from "./errors/defaultHandler.ts";
 import { ErrorHandler, Handler } from "./handler.ts";
 import { Methods } from "./methods.ts";
 import { Router } from "./router.ts";
-import { toArray } from "./utils.ts";
 
 export interface IDeroutexOptions {
   /// The generator for ctx.requestId. Defaults to a UUIDv4.
@@ -54,7 +53,7 @@ export class Deroutex extends Router {
 
     const ctx = Deroutex.createCtx({
       path: url.pathname || "/",
-      query: url.searchParams,
+      query: Object.fromEntries(url.searchParams.entries()),
       method: req.method,
       requestId: this.requestIdGenerator
         ? this.requestIdGenerator()
@@ -98,7 +97,7 @@ export class Deroutex extends Router {
    */
   public listen(
     addr: string | HTTPOptions,
-  ) {
+  ): { wait: Promise<void>; server: Server } {
     const server = serve(addr);
 
     const wait = (async () => {
@@ -120,13 +119,14 @@ export class Deroutex extends Router {
     path,
     query,
     req,
-    res,
+    res = {},
     requestId,
     providers,
     method,
     headers,
   }: ICreateCtx): ICtx => {
-    /* istanbul ignore next */
+    res.headers = headers || new Headers();
+
     return {
       data: {},
       params: {},
@@ -137,8 +137,8 @@ export class Deroutex extends Router {
       req,
       requestId,
       providers: { ...providers },
-      res: res || {},
-      headers: headers || new Headers(),
+      res,
+      headers: res.headers,
     };
   };
 
@@ -157,5 +157,21 @@ export class Deroutex extends Router {
     }
 
     return ctx;
+  }
+
+  /**
+   * Creates a mock ServerRequest, for testing.
+   */
+  public static mockReq(
+    method: string,
+    url: string,
+    { headers = new Headers() } = {},
+  ): ServerRequest {
+    const req = new ServerRequest();
+    req.method = method;
+    req.url = url;
+    req.headers = headers;
+
+    return req;
   }
 }
