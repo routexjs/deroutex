@@ -8,7 +8,6 @@ What is missing:
 
 - Documentation (currently Routex's docs can be used, main changes are to the `listen` APIs)
 - First-party packages for body parsing, cookies, WebSockets, etc
-- Continuous integration (GitHub Actions)
 - Finding a home to release it
 - Benchmarking and extensive testing
 
